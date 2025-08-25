@@ -82,11 +82,12 @@ Mas só existe **1 pia** e **1 vaso**.
 
   └───────┘     └───────┘     └───────┘     └────────┘
 
-  ^                                              |
 
-  |______________________________________________|        
+  ^                                                
+  |                                                      |
+  |______________________________________________________|              
 
-Ordem Lógica
+                      Ordem Lógica
 
 
 🔒 Exclusão Mútua
@@ -102,7 +103,74 @@ Ordem Lógica
    └─────────────┘
       
        ▲
-       │
        
 Só UMA pessoa entra por vez
+
+// Exemplo simplificado de Exclusão Mútua, Relógio Lógico e Eleição
+// Família no banheiro
+
+import java.util.concurrent.locks.ReentrantLock;
+
+class Banheiro {
+    private final ReentrantLock lock = new ReentrantLock();
+
+    // Exclusão mútua: apenas 1 pessoa por vez pode usar o banheiro
+    public void usar(String pessoa) {
+        lock.lock();
+        try {
+            System.out.println(pessoa + " entrou no banheiro 🚻");
+            Thread.sleep(1000); // simulando tempo de uso
+            System.out.println(pessoa + " saiu do banheiro ✅");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+class Familia implements Runnable {
+    private final String nome;
+    private final Banheiro banheiro;
+
+    public Familia(String nome, Banheiro banheiro) {
+        this.nome = nome;
+        this.banheiro = banheiro;
+    }
+
+    @Override
+    public void run() {
+        banheiro.usar(nome);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Banheiro banheiro = new Banheiro();
+
+        // Ordem lógica (Pai → Mãe → Filho → Filha)
+        String[] ordemLogica = {"Pai", "Mãe", "Filho", "Filha"};
+
+        // Eleição simples: o primeiro da lista é o coordenador
+        String coordenador = ordemLogica[0];
+        System.out.println("👑 Coordenador atual: " + coordenador);
+
+        // Simulação de uso do banheiro na ordem lógica
+        for (String pessoa : ordemLogica) {
+            new Thread(new Familia(pessoa, banheiro)).start();
+            try {
+                Thread.sleep(1200); // controla a ordem de entrada
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Se o coordenador (Pai) "falhar"
+        System.out.println("\n⚠️ O Pai não está disponível.");
+        coordenador = ordemLogica[1];
+        System.out.println("👉 Novo coordenador eleito: " + coordenador);
+    }
+}
+
 
