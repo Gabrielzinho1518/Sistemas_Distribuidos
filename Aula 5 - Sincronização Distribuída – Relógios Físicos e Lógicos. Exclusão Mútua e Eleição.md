@@ -106,6 +106,10 @@ Mas só existe **1 pia** e **1 vaso**.
        
 Só UMA pessoa entra por vez
 
+### Código criado pelo GPT sobre o exemplo acima 
+## Testado 
+
+```java
 // Exemplo simplificado de Exclusão Mútua, Relógio Lógico e Eleição
 // Família no banheiro
 
@@ -172,5 +176,3 @@ public class Main {
         System.out.println("👉 Novo coordenador eleito: " + coordenador);
     }
 }
-
-
