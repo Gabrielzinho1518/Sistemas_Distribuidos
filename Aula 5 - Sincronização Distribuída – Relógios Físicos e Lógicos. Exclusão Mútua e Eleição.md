@@ -1,73 +1,93 @@
-Relógios Físicos e Lógicos
+# Relógios Físicos e Lógicos, Exclusão Mútua e Eleição em Sistemas Distribuídos  
 
-Relógio físico: é o relógio real do computador (igual ao que marca horas). O problema é que em sistemas distribuídos cada máquina pode ter um horário diferente (diferença de milissegundos já atrapalha).
+## ⏱ Relógios Físicos e Lógicos  
 
-Relógio lógico: não se preocupa com a hora real, mas com a ordem dos eventos. Ele garante que se o evento A aconteceu antes de B, todos no sistema vão concordar com essa ordem, mesmo que os relógios físicos estejam diferentes. (Ex.: Relógio de Lamport).
+- **Relógio físico**: é o relógio real do computador (igual ao que marca horas).  
+  - Problema: em sistemas distribuídos cada máquina pode ter um horário diferente (diferença de milissegundos já atrapalha).  
 
-Em resumo:
+- **Relógio lógico**: não se preocupa com a hora real, mas sim com a **ordem dos eventos**.  
+  - Garante que se o evento **A aconteceu antes de B**, todos no sistema concordem com essa ordem.  
+  - Exemplo: **Relógio de Lamport**.  
 
-Físico = hora real (precisa de sincronização).
+**Resumo:**  
+- **Físico** = hora real (precisa de sincronização).  
+- **Lógico** = apenas a ordem dos eventos.  
 
-Lógico = apenas a ordem dos eventos.
+---
 
-Exclusão Mútua:
+## 🔒 Exclusão Mútua  
 
-Vários processos podem tentar acessar um recurso compartilhado (como um arquivo ou impressora).
+- Vários processos podem tentar acessar um **recurso compartilhado** (como um arquivo ou impressora).  
+- A exclusão mútua garante que **só um processo por vez** use esse recurso, evitando conflitos.  
+- Como não existe uma **memória central**, são usados **protocolos de mensagens** para decidir quem entra na seção crítica.  
 
-A exclusão mútua garante que só um processo por vez use esse recurso, evitando conflitos.
+**Exemplo:**  
+- Impressora → dois computadores mandam imprimir, mas só **um imprime por vez**.  
 
-Como não existe uma memória central, é preciso protocolos de mensagens entre os processos para decidir quem entra na “sala crítica”.
+---
 
-Pense numa impressora: dois computadores mandam imprimir, mas só um imprime por vez.
+## 👑 Eleição  
 
-Eleição:
+- Em um sistema distribuído pode ser necessário escolher um **coordenador/líder**.  
+- O algoritmo de eleição serve para os processos decidirem **quem será o líder** se o atual falhar. 
 
-Em um sistema distribuído, pode ser necessário escolher um coordenador/líder (um processo que vai organizar algo, como quem controla a exclusão mútua).
+**Exemplo prático:**  
+- É como numa turma sem professor: os alunos fazem uma **votação** para escolher um representante.  
 
-O algoritmo de eleição serve para os processos decidirem quem será o líder se o atual falhar.
+---
 
-Exemplos: Algoritmo do Bully, Algoritmo em Anel.
+## 👨‍👩‍👧‍👦 Metáfora do Banheiro  
 
-É como numa turma sem professor: os alunos fazem uma votação para escolher um representante.
+**Situação:**  
+4 pessoas (Pai, Mãe, Filho e Filha) querem usar o banheiro **ao mesmo tempo**.  
+Mas só existe **1 pia** e **1 vaso**.  
 
+### 🔒 Exclusão Mútua  
+- O banheiro só comporta **1 pessoa por vez**.  
+- Os outros precisam **esperar na fila**.  
+- → Só um processo entra na **seção crítica** (banheiro).  
 
-👨‍👩‍👧‍👦 Situação:
-4 pessoas (Pai, Mãe, Filho e Filha) querem usar o banheiro ao mesmo tempo. Só existe 1 pia e 1 vaso.
+### ⏱ Relógios Físicos e Lógicos  
+- Cada pessoa poderia usar o **relógio de pulso (físico)** para dizer quem chegou primeiro.  
+  - Problema: os relógios podem estar **desajustados**.  
+- Então a família define uma **ordem lógica fixa**:
+
+- Essa ordem substitui o relógio físico, e todos aceitam a sequência.  
+
+### 👑 Eleição  
+- A família decide que alguém deve ser **coordenador da fila**.  
+- Regra da eleição:  
+1. O **Pai** é coordenador.  
+2. Se o Pai não estiver, passa para a **Mãe**.  
+3. Se a Mãe não estiver, passa para o **Filho**.  
+4. Se também não, sobra para a **Filha**.  
+
+👉 Assim, **sempre existe um coordenador** para organizar quem vai ao banheiro.  
+
+---
+
+## ✅ Resumo da Metáfora  
+
+- **Exclusão mútua** → só 1 no banheiro de cada vez.  
+- **Relógio lógico** → ordem definida (Pai → Mãe → Filho → Filha).  
+- **Eleição** → se o coordenador atual não puder, passa para o próximo da ordem.
+
+               [Fila da Família]
+   ┌───────┐     ┌───────┐     ┌───────┐     ┌────────┐
+   │  Pai  │ --> │  Mãe  │ --> │ Filho │ --> │ Filha  │
+   └───────┘     └───────┘     └───────┘     └────────┘
+        ^                                      |
+        |______________________________________|
+
+                 Ordem Lógica
 
 🔒 Exclusão Mútua
+[Banheiro]
+   ┌─────────────┐
+   │   Vaso +    │
+   │    Pia      │
+   └─────────────┘
+       ▲
+       │
+Só UMA pessoa entra por vez
 
-Como o banheiro só comporta 1 pessoa por vez, os outros precisam esperar.
-
-Ou seja: só um processo entra na seção crítica (banheiro).
-
-⏱ Relógios Físicos e Lógicos
-
-Cada pessoa poderia usar o relógio de pulso (físico) para dizer quem chegou primeiro. Mas se os relógios não estão iguais, pode dar briga.
-
-Então a família define uma ordem lógica: Pai → Mãe → Filho → Filha.
-
-Essa ordem substitui o relógio físico, e todos aceitam a sequência.
-
-👑 Eleição
-
-Agora, alguém precisa coordenar a fila.
-
-A família faz uma eleição baseada na ordem pré-definida. Exemplo:
-
-O Pai é eleito coordenador.
-
-Se o Pai não estiver em casa, passa para a Mãe.
-
-Se a Mãe não estiver, passa para o Filho.
-
-Se também não, sobra para a Filha.
-
-👉 Isso garante que sempre exista um coordenador para organizar quem vai ao banheiro.
-
-✅ Resumo da metáfora:
-
-Exclusão mútua → só 1 no banheiro de cada vez.
-
-Relógio lógico → ordem definida (Pai → Mãe → Filho → Filha), independente da hora real.
-
-Eleição → se o Pai não puder ser coordenador, automaticamente passa para o próximo da ordem.
