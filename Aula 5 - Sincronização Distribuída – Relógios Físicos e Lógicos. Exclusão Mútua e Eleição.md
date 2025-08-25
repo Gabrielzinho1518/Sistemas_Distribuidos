@@ -106,7 +106,7 @@ Mas só existe **1 pia** e **1 vaso**.
        
 Só UMA pessoa entra por vez
 
-### Código criado pelo GPT sobre o exemplo acima 
+# Código criado pelo GPT sobre o exemplo acima 
 ## Testado 
 
 ```java
